@@ -1,0 +1,31 @@
+{
+  "name": "examples",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "watch": "node ./scripts/watch-and-copy-src.js",
+    "packager": "sh ./node_modules/react-native/packager/packager.sh --root ./node_modules/react-native-swiper",
+    "dev": "concurrently 'npm run watch' 'npm run packager'",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "^16.3.0-alpha.1",
+    "react-native": "0.54.2",
+    "react-native-swiper": "^1.5.13"
+  },
+  "devDependencies": {
+    "babel-jest": "22.4.1",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "22.4.2",
+    "react-test-renderer": "^16.3.0-alpha.1",
+    "concurrently": "^2.2.0",
+    "fs-extra": "^0.30.0",
+    "minimatch": "^3.0.2",
+    "node-watch": "^0.4.0",
+    "rimraf": "^2.5.4"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
