@@ -12,8 +12,83 @@ import {
   RefreshControl
 } from "react-native";
 import Swiper from "react-native-swiper";
+import { StackNavigator, TabNavigator, TabBarBottom } from "react-navigation";
+import HomeScreen from "../../pages/HomePage";
+import MineScreen from "../../pages/MinePage";
 
 const { width } = Dimensions.get("window");
+
+/*
+  定义TabNavigator
+*/
+const Tab = TabNavigator(
+  {
+    Home: {
+      screen: HomeScreen,
+      navigationOptions: ({ navigation }) => ({
+        tabBarLabel: "首页",
+        tabBarIcon: ({ focused, tintColor }) => (
+          <TabBarItem
+            tintColor={tintColor}
+            focused={focused}
+            normalImage={require("../../images/icon/index.png")}
+            selectedImage={require("../../images/icon/indexAct.png")}
+          />
+        )
+      })
+    },
+
+    Mine: {
+      screen: MineScreen,
+      navigationOptions: ({ navigation }) => ({
+        tabBarLabel: "我",
+        tabBarIcon: ({ focused, tintColor }) => (
+          <TabBarItem
+            tintColor={tintColor}
+            focused={focused}
+            normalImage={require("../../images/icon/mine.png")}
+            selectedImage={require("../../images/icon/mineAct.png")}
+          />
+        )
+      })
+    }
+  },
+
+  {
+    tabBarComponent: TabBarBottom,
+    tabBarPosition: "bottom",
+    swipeEnabled: false,
+    animationEnabled: false,
+    lazy: true,
+    tabBarOptions: {
+      activeTintColor: "#06c1ae",
+      inactiveTintColor: "#979797",
+      style: { backgroundColor: "#ffffff" },
+      labelStyle: {
+        fontSize: 20 // 文字大小
+      }
+    }
+  }
+);
+
+const Navigator = StackNavigator(
+  {
+    Tab: { screen: Tab },
+    Product: { screen: ProductScreen }
+  },
+
+  {
+    navigationOptions: {
+      headerBackTitle: null,
+      headerTintColor: "#333333",
+      showIcon: true,
+      swipeEnabled: false,
+      animationEnabled: false
+    },
+
+    mode: "card"
+  }
+);
 
 class ListRowComponent extends React.Component {
   render() {
@@ -77,6 +152,18 @@ export default class recommend extends React.Component {
       ],
       isRefreshing: false
     };
+  }
+
+  //TabBarItem
+  renderTabBarItem() {
+    return (
+      <Image
+        source={
+          this.props.focused ? this.props.selectedImage : this.props.normalImage
+        }
+        style={{ tintColor: this.props.tintColor, width: 25, height: 25 }}
+      />
+    );
   }
 
   componentDidMount() {
@@ -223,7 +310,7 @@ export default class recommend extends React.Component {
       <View style={{ backgroundColor: "#fff" }}>
         {this.renderStatusBar()}
         {this.renderTopBar()}
-        <ScrollView
+        {/* <ScrollView
           style={styles.scrollview}
           refreshControl={
             //设置下拉刷新组件
@@ -241,11 +328,25 @@ export default class recommend extends React.Component {
           {this.renderFlatList()}
           <View style={{ height: 10, backgroundColor: "#f0f0f1" }} />
           {this.renderRecoverRun("runRank")}
-        </ScrollView>
+        </ScrollView> */}
+        {this.renderTabBarItem()}
+        <ScrollableTabView
+          locked={true}
+          scrollWithoutAnimation={true}
+          tabBarPosition="bottom"
+          renderTabBar={() => (
+            <TabBar tabIcons={tabIcons} tabNames={tabNames} />
+          )}
+        >
+          <HomeScreen tabLabel="首页" navigator={this.props.navigator} />
+          <MineScreen tabLabel="我" navigator={this.props.navigator} />
+        </ScrollableTabView>
       </View>
     );
   }
 }
+
+var tabIcons = ['ios-home', 'ios-compass', 'ios-heart', 'ios-contact'];
 
 var styles = {
   container: {
